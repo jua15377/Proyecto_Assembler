@@ -1,0 +1,4 @@
+transistor
+rele
+optoacopladores
+optotransistores
