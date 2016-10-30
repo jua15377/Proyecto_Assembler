@@ -85,6 +85,10 @@ welcomeImg2:
 
 	pop {pc}
 
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
 
 .global a211LibreImg
 a211LibreImg: 
@@ -134,6 +138,10 @@ a211LibreImg:
 		bne filas2
 
 	pop {pc}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
 
 
 .global a211OcupadoImg
@@ -224,3 +232,227 @@ blackScreenImg:
 		bne filas4
 
 	pop {pc}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+
+.global a210LibreImg
+a210LibreImg: 
+	push {lr} 
+	
+	mov r6,#0
+	ldr r9, =origenX
+	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
+	ldr r7,=a210LibreWidth 			@Asignar valor al comparador de Y
+	ldr r7,[r7]
+	add r7, r9
+
+	ldr r10, =origenY
+	ldr r10, [r10]
+	ldr r8,=a210LibreHeight
+	ldr r8,[r8]
+	add r8, r10
+
+	ldr r2, =origenY
+	ldr r2, [r2]
+	filas5:
+		ldr r1, =origenX
+		ldr r1, [r1]
+		
+		dibujaPixel5:
+			
+			ldr r5,=a210Libre
+			ldrb r3,[r5,r6]			@Leer el dato de la matriz.
+			
+			ldr r0,=pixelAddr
+			ldr r0,[r0] 
+			push {r0-r12}
+			bl pixel				@Dibujamos el pixel. r1=x,r2=y,r3=colour
+			pop {r0-r12}
+			add r6,#1 		@Incrementamos los bytes dibujados
+			add r1,#1 
+
+			cmp r1, r7
+			blt dibujaPixel5				@Aumenta el contador del ancho de la imagen
+		
+	finIm5:	
+		@ aumentamos y
+		add r2,#1
+					
+		@Revisamos si ya dibujamos toda la imagen.
+		teq r2,r8
+		bne filas5
+
+	pop {pc}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+
+.global a210OcupadoImg
+a210OcupadoImg: 
+	push {lr} 
+	
+	mov r6,#0
+	ldr r9, =origenX
+	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
+	ldr r7,=a210OcupadoWidth 			@Asignar valor al comparador de Y
+	ldr r7,[r7]
+	add r7, r9
+
+	ldr r10, =origenY
+	ldr r10, [r10]
+	ldr r8,=a210OcupadoHeight
+	ldr r8,[r8]
+	add r8, r10
+
+	ldr r2, =origenY
+	ldr r2, [r2]
+	filas6:
+		ldr r1, =origenX
+		ldr r1, [r1]
+		
+		dibujaPixel6:
+			
+			ldr r5,=a210Ocupado
+			ldrb r3,[r5,r6]			@Leer el dato de la matriz.
+			
+			ldr r0,=pixelAddr
+			ldr r0,[r0] 
+			push {r0-r12}
+			bl pixel				@Dibujamos el pixel. r1=x,r2=y,r3=colour
+			pop {r0-r12}
+			add r6,#1 		@Incrementamos los bytes dibujados
+			add r1,#1 
+
+			cmp r1, r7
+			blt dibujaPixel6				@Aumenta el contador del ancho de la imagen
+		
+	finIm6:	
+		@ aumentamos y
+		add r2,#1
+					
+		@Revisamos si ya dibujamos toda la imagen.
+		teq r2,r8
+		bne filas6
+
+	pop {pc}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+
+.global a212LibreImg
+a212LibreImg: 
+	push {lr} 
+	
+	mov r6,#0
+	ldr r9, =origenX
+	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
+	ldr r7,=a212LibreWidth 			@Asignar valor al comparador de Y
+	ldr r7,[r7]
+	add r7, r9
+
+	ldr r10, =origenY
+	ldr r10, [r10]
+	ldr r8,=a212LibreHeight
+	ldr r8,[r8]
+	add r8, r10
+
+	ldr r2, =origenY
+	ldr r2, [r2]
+	filas7:
+		ldr r1, =origenX
+		ldr r1, [r1]
+		
+		dibujaPixel7:
+			
+			ldr r5,=a212Libre
+			ldrb r3,[r5,r6]			@Leer el dato de la matriz.
+			
+			ldr r0,=pixelAddr
+			ldr r0,[r0] 
+			push {r0-r12}
+			bl pixel				@Dibujamos el pixel. r1=x,r2=y,r3=colour
+			pop {r0-r12}
+			add r6,#1 		@Incrementamos los bytes dibujados
+			add r1,#1 
+
+			cmp r1, r7
+			blt dibujaPixel7				@Aumenta el contador del ancho de la imagen
+		
+	finIm7:	
+		@ aumentamos y
+		add r2,#1
+					
+		@Revisamos si ya dibujamos toda la imagen.
+		teq r2,r8
+		bne filas7
+
+	pop {pc}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+
+.global a212OcupadoImg
+a212OcupadoImg: 
+	push {lr} 
+	
+	mov r6,#0
+	ldr r9, =origenX
+	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
+	ldr r7,=a212OcupadoWidth 			@Asignar valor al comparador de Y
+	ldr r7,[r7]
+	add r7, r9
+
+	ldr r10, =origenY
+	ldr r10, [r10]
+	ldr r8,=a212OcupadoHeight
+	ldr r8,[r8]
+	add r8, r10
+
+	ldr r2, =origenY
+	ldr r2, [r2]
+	filas8:
+		ldr r1, =origenX
+		ldr r1, [r1]
+		
+		dibujaPixel8:
+			
+			ldr r5,=a212Ocupado
+			ldrb r3,[r5,r6]			@Leer el dato de la matriz.
+			
+			ldr r0,=pixelAddr
+			ldr r0,[r0] 
+			push {r0-r12}
+			bl pixel				@Dibujamos el pixel. r1=x,r2=y,r3=colour
+			pop {r0-r12}
+			add r6,#1 		@Incrementamos los bytes dibujados
+			add r1,#1 
+
+			cmp r1, r7
+			blt dibujaPixel8				@Aumenta el contador del ancho de la imagen
+		
+	finIm8:	
+		@ aumentamos y
+		add r2,#1
+					
+		@Revisamos si ya dibujamos toda la imagen.
+		teq r2,r8
+		bne filas8
+
+	pop {pc}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
