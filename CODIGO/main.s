@@ -13,9 +13,16 @@
 @PUERTOS DE GPIO
 @@-----ENTRADA-----
 @ GPIO 6 = BTN Start (provisional) 
-@ GPIO 13 = BTN estado salon a211(provisinal)
-@ GPIO 19 = BTN estado salon a210(provisinal) 
-@ GPIO 26 = BTN estado salon a212(provisinal) 
+@ GPIO 13 = BTN estado salon a211
+@ GPIO 19 = BTN estado salon a210
+@ GPIO 26 = BTN estado salon a212
+@@-----SALIDA-----
+@ GPIO 24 = LED rojo salon a210
+@ GPIO 23 = LED verde salon a210
+@ GPIO 12 = LED rojo salon a211
+@ GPIO 16 = LED verde salon a211
+@ GPIO 20 = LED rojo salon a212
+@ GPIO 21 = LED verde salon a212
 
 
  .text
@@ -51,19 +58,73 @@ main:
 	mov r0,#26
 	mov r1,#0
 	bl SetGpioFunction	
-@@--------------------Estableciendo puertos para la escritura------------------	
 
-@@-----------------------------------------------------------------------------
+@@--------------------Estableciendo puertos para la escritura------------------	
+	@GPIO para escritura puerto 24 
+	mov r0,#24
+	mov r1,#1
+	bl SetGpioFunction
+
+	@GPIO para escritura puerto 23 
+	mov r0,#23
+	mov r1,#1
+	bl SetGpioFunction	
+
+	@GPIO para escritura puerto 12 
+	mov r0,#12
+	mov r1,#1
+	bl SetGpioFunction
+
+	@GPIO para escritura puerto 16 
+	mov r0,#16
+	mov r1,#1
+	bl SetGpioFunction	
+
+	@GPIO para escritura puerto 20 
+	mov r0,#20
+	mov r1,#1
+	bl SetGpioFunction	
+
+	@GPIO para escritura puerto 21 
+	mov r0,#21
+	mov r1,#1
+	bl SetGpioFunction	
+
+@--------------------------
+@@apgando los LEDs y limpieza de pantalla
+	bl blackScreenImg
+	mov r0,#23
+	mov r1,#0
+	bl SetGpio
+	mov r0,#24
+	mov r1,#0
+	bl SetGpio
+	mov r0,#12
+	mov r1,#0
+	bl SetGpio
+	mov r0,#16
+	mov r1,#0
+	bl SetGpio
+	mov r0,#20
+	mov r1,#0
+	bl SetGpio
+	mov r0,#21
+	mov r1,#0
+	bl SetGpio
+@@pausa
+	mov r0,#3
+	bl better_sleep
+
+@@-------------------------------
+
 welcomeLoop: 										@El loop que se mantiene en la pagina de inicio hasta que un boton es presionado
 	bl welcomeImg
-	mov r0,#3
-
+	bl checkButtons
 	@revisar boton Start
 	mov r0,#6
 	bl GetGpio
 	cmp r0,#1
-	beq printResults
-	bl checkButtons					
+	bleq printResults	
 
 b welcomeLoop 
 
@@ -74,41 +135,142 @@ checkButtons:
 	mov r0,#13
 	bl GetGpio
 	cmp r0,#1
-	beq a211L
-	bne a211O
+	bleq a211O
+	mov r0,#13
+	bl GetGpio
+	cmp r0,#0
+	bleq a211L
 
 	@revisar boton a210
 	mov r0,#19
 	bl GetGpio
 	cmp r0,#1
-	beq a210L
-	bne a210O	
+	bleq a210O
+	mov r0,#19
+	bl GetGpio
+	cmp r0,#0
+	bleq a210L	
 
 	@revisar boton a212
 	mov r0,#26
 	bl GetGpio
 	cmp r0,#1
-	beq a212L
-	bne a212O	
+	bleq a212O
+	mov r0,#26
+	bl GetGpio
+	cmp r0,#0
+	bleq a212L	
 
 pop {pc}
 
+@@muestra informacion de como acceder al sitio web
 InfoPage:
 	push {lr}
 	bl welcomeImg2
 	mov r0,#5
 	bl better_sleep
+	bl checkButtons
 pop {pc}
-
+@@CADA UNA DE LAS SIGUIENTES SUBRUTINAS ES SELECCIONADA SEGUN EL ESTAO DEL INTERRUPTOR DEL SALON
+@@LA TERMINACION L SIGINFCA LIBRE Y LA TERMINACION O a211OcupadoImg
+@@SE ENCARGAN DE ENCENDER Y APAGAR LOS LEDs ASI COMO DE CAMBIAR EL ESATO DE UA VARIABLE UTILIZADA PARA SABER QUE SE VA A IMPRIMIR
 a211L:
 	push {lr}
+	@enciende LED Verde 
+	mov r0,#16
+	mov r1,#1
+	bl SetGpio
+	@apaga LED rojo
+	mov r0,#12
+	mov r1,#0
+	bl SetGpio
+
 	ldr r0,=a211Estado
-	ldr r1,[r0]
-	cmp r1,#1
-	moveq r1,#2
-	movne r1,#1
+	mov r1,#1
 	str r1,[r0]
 pop {pc}
+
+a211O:
+	push {lr}
+	@enciende LED rojo
+	mov r0,#12
+	mov r1,#1
+	bl SetGpio
+	@apaga LED verde
+	mov r0,#16
+	mov r1,#0
+	bl SetGpio
+
+	ldr r0,=a211Estado
+	mov r1,#2
+	str r1,[r0]
+pop {pc}
+
+a210L:
+	push {lr}
+	@enciende LED Verde 
+	mov r0,#23
+	mov r1,#1
+	bl SetGpio
+	@apaga LED rojo
+	mov r0,#24
+	mov r1,#0
+	bl SetGpio
+
+	ldr r2,=a210Estado
+	mov r3,#1
+	str r3,[r2]
+pop {pc}
+
+a210O:
+	push {lr}
+	@enciende LED rojo
+	mov r0,#24
+	mov r1,#1
+	bl SetGpio
+	@apaga LED verde
+	mov r0,#23
+	mov r1,#0
+	bl SetGpio
+
+	ldr r2,=a210Estado
+	mov r3,#2
+	str r3,[r2]
+pop {pc}
+
+a212L:
+	push {lr}
+	push {lr}
+	@enciende LED Verde 
+	mov r0,#21
+	mov r1,#1
+	bl SetGpio
+	@apaga LED rojo
+	mov r0,#20
+	mov r1,#0
+	bl SetGpio
+
+	ldr r0,=a212Estado
+	mov r1,#1
+	str r1,[r0]
+pop {pc}
+
+a212O:
+	push {lr}
+	@enciende LED rojo
+	mov r0,#20
+	mov r1,#1
+	bl SetGpio
+	@apaga LED verde
+	mov r0,#21
+	mov r1,#0
+	bl SetGpio
+
+	ldr r0,=a212Estado
+	mov r1,#2
+	str r1,[r0]
+pop {pc}
+
 
 printResults:
 	push {lr}
@@ -120,15 +282,8 @@ printResults:
 	moveq r0,#1
 	bl better_sleep
 
-	@@ajustando posicion de imagen a211
-	ldr r0,=origenY
-	ldr r1,[r0]
-	mov r1,#10
-	ldr r2,=origenX
-	ldr r3,[r2]
-	mov r1,#10
-	str r1,[r0]
-	str r3,[r2]
+	@@imagen a211
+
 	@@decidiendo que imagen mostrar
 	ldr r0,=a211Estado
 	ldr r1,[r0]
@@ -136,15 +291,8 @@ printResults:
 	bleq a211LibreImg
 	blne a211OcupadoImg
 
-	@@ajustando posicion de imagen a210
-	ldr r0,=origenY
-	ldr r1,[r0]
-	mov r1,#20
-	ldr r2,=origenX
-	ldr r3,[r2]
-	mov r1,#10
-	str r1,[r0]
-	str r3,[r2]
+	@@imagen a210
+
 	@@decidiendo que imagen mostrar
 	ldr r0,=a210Estado
 	ldr r1,[r0]
@@ -152,15 +300,7 @@ printResults:
 	bleq a210LibreImg
 	blne a210OcupadoImg
 
-	@@ajustando posicion de imagen a212
-	ldr r0,=origenY
-	ldr r1,[r0]
-	mov r1,#10
-	ldr r2,=origenX
-	ldr r3,[r2]
-	mov r1,#10
-	str r1,[r0]
-	str r3,[r2]
+	@@imagen a212
 	@@decidiendo que imagen mostrar
 	ldr r0,=a212Estado
 	ldr r1,[r0]
@@ -168,14 +308,17 @@ printResults:
 	bleq a212LibreImg
 	blne a212OcupadoImg
 
+	bl checkButtons
 	@pausa
 	moveq r0,#10
 	bl better_sleep
+	bl checkButtons
 	bl InfoPage
 
 @regrea a la  pantalla de inicio
 pop {pc}
 
+@@PEQUENA PAUSA
 wait: 												@Subrutina de delay
 	ldr r0, =bign	 @ big number
 	ldr r0, [r0]
@@ -184,15 +327,20 @@ wait: 												@Subrutina de delay
 	bne sleepLoop @ loop delay
 	mov pc,lr 
 
-  
+ @@VARIABLES
 .data 												@variables globales a utilizar
-.global pixelAddr,origenX,origenY
+.global pixelAddr,origenY
 	pixelAddr: .word 0
 	bign: .word 0xfffffff
-	origenY: .word 0
-	origenX: .word 0
+	origenY: .word 100
+@@UBICACION EN LA PANTALLA DE CADA UNO DE LOS ROTULOS DE LOS SALONES
+.global origenX1,origenX2,origenX3
+	origenX1: .word 0
+	origenX2: .word 430
+	origenX3: .word 830
 .global myloc
 	myloc: .word 0
+@@SE UTILIZA PARA SABER SI EL SALON ESTA DISPONIBLE O NO
 a210Estado: .word 1
 a211Estado: .word 1
 a212Estado: .word 1

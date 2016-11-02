@@ -95,7 +95,7 @@ a211LibreImg:
 	push {lr} 
 	
 	mov r6,#0
-	ldr r9, =origenX
+	ldr r9, =origenX2
 	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
 	ldr r7,=a211LibreWidth 			@Asignar valor al comparador de Y
 	ldr r7,[r7]
@@ -110,7 +110,7 @@ a211LibreImg:
 	ldr r2, =origenY
 	ldr r2, [r2]
 	filas2:
-		ldr r1, =origenX
+		ldr r1, =origenX2
 		ldr r1, [r1]
 		
 		dibujaPixel2:
@@ -149,7 +149,7 @@ a211OcupadoImg:
 	push {lr} 
 	
 	mov r6,#0
-	ldr r9, =origenX
+	ldr r9, =origenX2
 	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
 	ldr r7,=a211OcupadoWidth 			@Asignar valor al comparador de Y
 	ldr r7,[r7]
@@ -164,7 +164,7 @@ a211OcupadoImg:
 	ldr r2, =origenY
 	ldr r2, [r2]
 	filas3:
-		ldr r1, =origenX
+		ldr r1, =origenX2
 		ldr r1, [r1]
 		
 		dibujaPixel3:
@@ -243,7 +243,7 @@ a210LibreImg:
 	push {lr} 
 	
 	mov r6,#0
-	ldr r9, =origenX
+	ldr r9, =origenX1
 	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
 	ldr r7,=a210LibreWidth 			@Asignar valor al comparador de Y
 	ldr r7,[r7]
@@ -258,7 +258,7 @@ a210LibreImg:
 	ldr r2, =origenY
 	ldr r2, [r2]
 	filas5:
-		ldr r1, =origenX
+		ldr r1, =origenX1
 		ldr r1, [r1]
 		
 		dibujaPixel5:
@@ -297,7 +297,7 @@ a210OcupadoImg:
 	push {lr} 
 	
 	mov r6,#0
-	ldr r9, =origenX
+	ldr r9, =origenX1
 	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
 	ldr r7,=a210OcupadoWidth 			@Asignar valor al comparador de Y
 	ldr r7,[r7]
@@ -312,7 +312,7 @@ a210OcupadoImg:
 	ldr r2, =origenY
 	ldr r2, [r2]
 	filas6:
-		ldr r1, =origenX
+		ldr r1, =origenX1
 		ldr r1, [r1]
 		
 		dibujaPixel6:
@@ -341,9 +341,6 @@ a210OcupadoImg:
 
 	pop {pc}
 
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -355,7 +352,7 @@ a212LibreImg:
 	push {lr} 
 	
 	mov r6,#0
-	ldr r9, =origenX
+	ldr r9, =origenX3
 	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
 	ldr r7,=a212LibreWidth 			@Asignar valor al comparador de Y
 	ldr r7,[r7]
@@ -370,7 +367,7 @@ a212LibreImg:
 	ldr r2, =origenY
 	ldr r2, [r2]
 	filas7:
-		ldr r1, =origenX
+		ldr r1, =origenX3
 		ldr r1, [r1]
 		
 		dibujaPixel7:
@@ -409,7 +406,7 @@ a212OcupadoImg:
 	push {lr} 
 	
 	mov r6,#0
-	ldr r9, =origenX
+	ldr r9, =origenX3
 	ldr r9, [r9]				@Contador que cuenta la cantidad de bytes dibujados
 	ldr r7,=a212OcupadoWidth 			@Asignar valor al comparador de Y
 	ldr r7,[r7]
@@ -424,7 +421,7 @@ a212OcupadoImg:
 	ldr r2, =origenY
 	ldr r2, [r2]
 	filas8:
-		ldr r1, =origenX
+		ldr r1, =origenX3
 		ldr r1, [r1]
 		
 		dibujaPixel8:
