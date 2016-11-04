@@ -27,24 +27,62 @@ c2 =0
 pollTime =1
 path = "/home/pi/estado.html"
 
-def revisarEstado():
+def revisarEstado1():
 	threading.Timer(pollTime, revisarEstado).start() # Se usa para que la funcion corra indefinidamente
 	global c1
 	global c2 # Accesar a contadores
 	if (GPIO.input(17)):
 		# Salon no disponible
-		updateHTML("Salon 1",1)
+		updateHTML("Salon A211",1)
 		c1 +=pollTime
 		GPIO.output(25, GPIO.LOW) # Verificar si es logica inversa o directa
 	else:
 		# Salon disponible
-		updateHTML("Slaon 1",0)
+		updateHTML("Slaon A211",0)
 		c1 =0
 		GPIO.output(25, GPIO.HIGH) # Verificar si es logica inversa o directa
 	if(c1 >=4500):
 		# En caso que un salon este siendo utilizado por mucho tiempo (45 min
 		# Y alguien haya olvidado oprimir el switch
-		updateHTML("Salon 1",3)
+		updateHTML("Salon A211",2)
+
+def revisarEstado2():
+	threading.Timer(pollTime, revisarEstado).start() # Se usa para que la funcion corra indefinidamente
+	global c1
+	global c2 # Accesar a contadores
+	if (GPIO.input(17)):
+		# Salon no disponible
+		updateHTML("Salon A212",1)
+		c1 +=pollTime
+		GPIO.output(25, GPIO.LOW) # Verificar si es logica inversa o directa
+	else:
+		# Salon disponible
+		updateHTML("Slaon A212",0)
+		c1 =0
+		GPIO.output(25, GPIO.HIGH) # Verificar si es logica inversa o directa
+	if(c1 >=4500):
+		# En caso que un salon este siendo utilizado por mucho tiempo (45 min
+		# Y alguien haya olvidado oprimir el switch
+		updateHTML("Salon A212",2)
+
+def revisarEstado3():
+	threading.Timer(pollTime, revisarEstado).start() # Se usa para que la funcion corra indefinidamente
+	global c1
+	global c2 # Accesar a contadores
+	if (GPIO.input(17)):
+		# Salon no disponible
+		updateHTML("Salon A213",1)
+		c1 +=pollTime
+		GPIO.output(25, GPIO.LOW) # Verificar si es logica inversa o directa
+	else:
+		# Salon disponible
+		updateHTML("Slaon A213",0)
+		c1 =0
+		GPIO.output(25, GPIO.HIGH) # Verificar si es logica inversa o directa
+	if(c1 >=4500):
+		# En caso que un salon este siendo utilizado por mucho tiempo (45 min
+		# Y alguien haya olvidado oprimir el switch
+		updateHTML("Salon A213",2)
 
 def updateHTML(salon, estado):
 	global c1
@@ -71,7 +109,7 @@ def updateHTML(salon, estado):
 			html = soup.prettify("utf-8")
 			with open(path, "wb") as file:
 				file.write(html)
-		if (estado ==3): # Ha estado sin cambiar por 45 minutos
+		if (estado ==2): # Ha estado sin cambiar por 45 minutos
 			replaceString = " "
 			if (salon == "Salon 1"):
 				replaceString = salon + " ha estado cerrado por " + str(c1) + " segundos"
@@ -85,3 +123,6 @@ def updateHTML(salon, estado):
 			html = soup.prettify("utf-8")
 			with open(path, "wb") as file:
 				file.write(html)
+def upload():
+	threading.Timer(15, upload).start()
+	os.system('xyz') # Aqui va el directorio de Dropbox
