@@ -7,8 +7,8 @@
 *   	 Jonnathan Juares, Carnet: 15377
 *   Taller de Assembler, Seccio: 30
 *******************************************************************************/
-
-@@compliar con: gcc -o main main.s  metodos.s pixelV2.c phys_to_virt.c timeLibV2.c gpio0_2.s intro.s salones.s
+@@adee just in case -lpython2.7 prueba2.c
+@@compliar con: gcc -o main main.s metodos.s pixelV2.c phys_to_virt.c timeLibV2.c gpio0_2.s intro.s salones.s
  
 @PUERTOS DE GPIO
 @@-----ENTRADA-----
@@ -112,7 +112,7 @@ main:
 	mov r1,#0
 	bl SetGpio
 @@pausa
-	mov r0,#3
+	mov r0,#2
 	bl better_sleep
 
 @@-------------------------------
@@ -166,6 +166,7 @@ pop {pc}
 @@muestra informacion de como acceder al sitio web
 InfoPage:
 	push {lr}
+	bl checkButtons
 	bl welcomeImg2
 	mov r0,#5
 	bl better_sleep
@@ -239,8 +240,7 @@ a210O:
 pop {pc}
 
 a212L:
-	push {lr}
-	push {lr}
+	push {lr} 
 	@enciende LED Verde 
 	mov r0,#21
 	mov r1,#1
@@ -308,11 +308,9 @@ printResults:
 	bleq a212LibreImg
 	blne a212OcupadoImg
 
-	bl checkButtons
 	@pausa
 	moveq r0,#10
 	bl better_sleep
-	bl checkButtons
 	bl InfoPage
 
 @regrea a la  pantalla de inicio
