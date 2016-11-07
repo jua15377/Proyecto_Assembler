@@ -13,6 +13,7 @@ import threading, re, time, os
 from time import strftime
 from BeautifulSoup import BeautifulSoup
 import RPi.GPio as GPIO
+import git
 # Setup de pines GPIO
 
 GPIO.setmode(GPIO.BCM)
@@ -124,5 +125,7 @@ def updateHTML(salon, estado):
 			with open(path, "wb") as file:
 				file.write(html)
 def upload():
-	threading.Timer(15, upload).start()
-	os.system('xyz') # Aqui va el directorio de Dropbox
+	repo = git.Repo.clone_from("git@github.com:JuanAndres896/JuanAndres896.github.io.git","JuanAndres896.github.io")
+	repo.index.add(["index.html"])
+	repo.index.commit("prueba")
+	repo.remotes.origin.push()
