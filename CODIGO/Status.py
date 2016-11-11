@@ -9,123 +9,121 @@ que informa sobre la disponibilidad de los salones en tiempo real
 Se van a llamar en ARM via C, con embedding
 '''
 # Idea original: https://www.youtube.com/watch?v=ZszlVVY1LXo
-import threading, re, time, os
+import  re, time, os, sys
 from time import strftime
 from BeautifulSoup import BeautifulSoup
-import RPi.GPio as GPIO
-import git
-# Setup de pines GPIO
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17,GPIO.IN) # Numero de pin 'dummy', sujeto a cambiar
-GPIO.setup(27, GPIO.IN) # Numero de pin 'dummy', sujeto a cambiar
-GPIO.setup(24, GPIO.OUT) # Numero de pin 'dummy', sujeto a cambiar
-GPIO.setup(25, GPIO.OUT) # Numero de pin 'dummy', sujeto a cambiar
 
 # Declaracion de variables
 c1 =0
 c2 =0
-pollTime =1
-path = "/home/pi/estado.html"
+path = "/home/pi/Desktop/TallerDeAssembler/proyecto/estado.html"
 
-def revisarEstado1():
-	threading.Timer(pollTime, revisarEstado).start() # Se usa para que la funcion corra indefinidamente
-	global c1
-	global c2 # Accesar a contadores
-	if (GPIO.input(17)):
+def actualizarEstadoAula1(entrada):
+	if (entrada == 0):
+		#Salon no disponible
+		updateHTML("Salon A210",0)
+	else:
+		#Salon disponible
+		updateHTML("Salon A210",1)
+
+def actualizarEstadoAula2(entrada):
+	if (entrada == 0):
 		# Salon no disponible
+		updateHTML("Salon A211",0)
+	else:
+		# Salon disponible
 		updateHTML("Salon A211",1)
-		c1 +=pollTime
-		GPIO.output(25, GPIO.LOW) # Verificar si es logica inversa o directa
+def actualizarEstadoAula3(entrada):
+	if (entrada == 0):
+		# Salon no disponible
+		updateHTML("Salon A212",0)
 	else:
 		# Salon disponible
-		updateHTML("Slaon A211",0)
-		c1 =0
-		GPIO.output(25, GPIO.HIGH) # Verificar si es logica inversa o directa
-	if(c1 >=4500):
-		# En caso que un salon este siendo utilizado por mucho tiempo (45 min
-		# Y alguien haya olvidado oprimir el switch
-		updateHTML("Salon A211",2)
-
-def revisarEstado2():
-	threading.Timer(pollTime, revisarEstado).start() # Se usa para que la funcion corra indefinidamente
-	global c1
-	global c2 # Accesar a contadores
-	if (GPIO.input(17)):
-		# Salon no disponible
 		updateHTML("Salon A212",1)
-		c1 +=pollTime
-		GPIO.output(25, GPIO.LOW) # Verificar si es logica inversa o directa
-	else:
-		# Salon disponible
-		updateHTML("Slaon A212",0)
-		c1 =0
-		GPIO.output(25, GPIO.HIGH) # Verificar si es logica inversa o directa
-	if(c1 >=4500):
-		# En caso que un salon este siendo utilizado por mucho tiempo (45 min
-		# Y alguien haya olvidado oprimir el switch
-		updateHTML("Salon A212",2)
-
-def revisarEstado3():
-	threading.Timer(pollTime, revisarEstado).start() # Se usa para que la funcion corra indefinidamente
-	global c1
-	global c2 # Accesar a contadores
-	if (GPIO.input(17)):
-		# Salon no disponible
-		updateHTML("Salon A213",1)
-		c1 +=pollTime
-		GPIO.output(25, GPIO.LOW) # Verificar si es logica inversa o directa
-	else:
-		# Salon disponible
-		updateHTML("Slaon A213",0)
-		c1 =0
-		GPIO.output(25, GPIO.HIGH) # Verificar si es logica inversa o directa
-	if(c1 >=4500):
-		# En caso que un salon este siendo utilizado por mucho tiempo (45 min
-		# Y alguien haya olvidado oprimir el switch
-		updateHTML("Salon A213",2)
 
 def updateHTML(salon, estado):
 	global c1
 	global c2 # Accesar a contadores
 	with open(path, "r+") as n:
 		data = n.read()
-		if (estado ==1): # No disponible
-			replaceString = salon + "no esta disponible \n A las: " + strftime("%H:%M:%S")
-			soup = BeautifulSoup(data)
-			div = soup.find('div',{'class': salon})
-			div['style'] = 'background-color: #FF0000; font-size:xx-large;' # Probar e ir cambiando despues
-			div.string = replaceString
-			n.close
-			html = soup.prettify("utf-8")
-			with open(path, "wb") as file:
-				file.write(html)
-		if (estado==0): # Disponible
-			replaceString = salon + "¡esta disponible! \n A las: " + strftime("%H:%M:%S")
-			soup = BeautifulSoup(data)
-			div = soup.find('div',{'class': salon})
-			div['style'] = 'background-color: #008000; font-size:xx-large;' # Probar e ir cambiando despues
-			div.string = replaceString
-			n.close
-			html = soup.prettify("utf-8")
-			with open(path, "wb") as file:
-				file.write(html)
-		if (estado ==2): # Ha estado sin cambiar por 45 minutos
-			replaceString = " "
-			if (salon == "Salon 1"):
-				replaceString = salon + " ha estado cerrado por " + str(c1) + " segundos"
-			else:
-				replaceString = salon + " ha estado cerrado por " + str(c2) + " segundos"
-			soup = BeautifulSoup(data)
-			div = soup.find('div',{'class': salon})
-			div['style'] = 'background-color: #008000; font-size:xx-large;' # Probar e ir cambiando despues
-			div.string = replaceString
-			n.close
-			html = soup.prettify("utf-8")
-			with open(path, "wb") as file:
-				file.write(html)
-def upload():
-	repo = git.Repo.clone_from("git@github.com:JuanAndres896/JuanAndres896.github.io.git","JuanAndres896.github.io")
-	repo.index.add(["index.html"])
-	repo.index.commit("prueba")
-	repo.remotes.origin.push()
+		if (salon == "Salon A210"):
+			if (estado == 0): # No disponible
+				replaceString = salon + " no esta disponible\n A las: " + strftime("%H:%M:%S")
+				soup = BeautifulSoup(data)
+				div = soup.find("div",{"class": "Salon A210"})
+				div['style'] = 'background-color: #FF0000; font-size:xx-large;' # Probar e ir cambiando despues
+				div.string=replaceString
+				n.close
+				html = soup.prettify("utf-8")
+				with open(path, "wb") as file:
+					file.write(html)
+			if (estado==1): # Disponible
+				replaceString = salon + " esta disponible!\n A las: " + strftime("%H:%M:%S")
+				soup = BeautifulSoup(data)
+				div = soup.find("div",{"class": "Salon A210"})
+				div['style'] = 'background-color: #33cc33; font-size:xx-large;'
+				div.string=replaceString
+				n.close
+				html = soup.prettify("utf-8")
+				with open(path, "wb") as file:
+					file.write(html)
+		if (salon == "Salon A211"):
+			if (estado ==0): # No disponible
+				replaceString = salon + " no esta disponible\n A las: " + strftime("%H:%M:%S")
+				soup = BeautifulSoup(data)
+				div = soup.find("div",{"class": "Salon A211"})
+				
+				div['style'] = 'background-color: #FF0000; font-size:xx-large;' # Probar e ir cambiando despues
+				div.string=replaceString
+				n.close
+				html = soup.prettify("utf-8")
+				with open(path, "wb") as file:
+					file.write(html)
+			if (estado==1): # Disponible
+				replaceString = salon + " esta disponible!\n A las: " + strftime("%H:%M:%S")
+				soup = BeautifulSoup(data)
+				div = soup.find("div",{"class": "Salon A211"})
+				div['style'] = 'background-color: #33cc33; font-size:xx-large;'
+				div.string=replaceString
+				n.close
+				html = soup.prettify("utf-8")
+				with open(path, "wb") as file:
+					file.write(html)
+		if (salon == "Salon A212"):
+			if (estado ==0): # No disponible
+				replaceString = salon + " no esta disponible\n A las: " + strftime("%H:%M:%S")
+				soup = BeautifulSoup(data)
+				div = soup.find("div",{"class": "Salon A212"})
+				
+				div['style'] = 'background-color: #FF0000; font-size:xx-large;' # Probar e ir cambiando despues
+				div.string=replaceString
+				n.close
+				html = soup.prettify("utf-8")
+				with open(path, "wb") as file:
+					file.write(html)
+			if (estado==1): # Disponible
+				replaceString = salon + " esta disponible!\n A las: " + strftime("%H:%M:%S")
+				soup = BeautifulSoup(data)
+				div = soup.find("div",{"class": "Salon A212"})
+				div['style'] = 'background-color: #33cc33; font-size:xx-large;'
+				div.string=replaceString
+				n.close
+				html = soup.prettify("utf-8")
+				with open(path, "wb") as file:
+					file.write(html)
+#http://stackoverflow.com/questions/17544307/how-do-i-run-python-script-using-arguments-in-windows-command-line
+
+def actualizacion(aulaParam,condcionParam):
+    if(aulaParam == 210):
+    	actualizarEstadoAula1(condcionParam)
+    elif(aulaParam == 211):
+    	actualizarEstadoAula2(condcionParam)
+    elif(aulaParam == 212):
+    	actualizarEstadoAula3(condcionParam)
+
+if __name__ == "__main__":
+    aula = int(sys.argv[1])
+    #print aula
+    condcion = int(sys.argv[2])
+    #print condcion
+    actualizacion(aula, condcion)

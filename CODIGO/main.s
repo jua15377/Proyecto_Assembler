@@ -7,8 +7,8 @@
 *   	 Jonnathan Juares, Carnet: 15377
 *   Taller de Assembler, Seccio: 30
 *******************************************************************************/
-@@adee just in case -lpython2.7 prueba2.c
-@@compliar con: gcc -o main main.s metodos.s pixelV2.c phys_to_virt.c timeLibV2.c gpio0_2.s intro.s salones.s
+
+@@compliar con: gcc -o main main.s libreriasHtml.c metodos.s pixelV2.c phys_to_virt.c timeLibV2.c gpio0_2.s intro.s salones.s
  
 @PUERTOS DE GPIO
 @@-----ENTRADA-----
@@ -34,7 +34,6 @@ main:
 	bl getScreenAddr 			@Se obtiene la direccion de la pantalla 
 	ldr r1,=pixelAddr
 	str r0,[r1]
-
 
 @@--------------------utilizando la biblioteca GPIO (gpio0_2.s)------------------
 	bl GetGpioAddress @solo se llama una vez
@@ -92,6 +91,7 @@ main:
 
 @--------------------------
 @@apgando los LEDs y limpieza de pantalla
+
 	bl blackScreenImg
 	mov r0,#23
 	mov r1,#0
@@ -186,6 +186,10 @@ a211L:
 	mov r1,#0
 	bl SetGpio
 
+	@@actualizacion de HTML
+	mov r0,#1
+	bl htmlUpdaterA211
+
 	ldr r0,=a211Estado
 	mov r1,#1
 	str r1,[r0]
@@ -202,6 +206,10 @@ a211O:
 	mov r1,#0
 	bl SetGpio
 
+	@@actualizacion de HTML
+	mov r0,#0
+	bl htmlUpdaterA211
+
 	ldr r0,=a211Estado
 	mov r1,#2
 	str r1,[r0]
@@ -209,6 +217,10 @@ pop {pc}
 
 a210L:
 	push {lr}
+	@@actualizacion de HTML
+	mov r0,#1
+	bl htmlUpdaterA210
+
 	@enciende LED Verde 
 	mov r0,#23
 	mov r1,#1
@@ -217,7 +229,6 @@ a210L:
 	mov r0,#24
 	mov r1,#0
 	bl SetGpio
-
 	ldr r2,=a210Estado
 	mov r3,#1
 	str r3,[r2]
@@ -225,6 +236,11 @@ pop {pc}
 
 a210O:
 	push {lr}
+	
+	@@actualizacion de HTML
+	mov r0,#2
+	bl htmlUpdaterA210
+
 	@enciende LED rojo
 	mov r0,#24
 	mov r1,#1
@@ -250,6 +266,10 @@ a212L:
 	mov r1,#0
 	bl SetGpio
 
+	@@actualizacion de HTML
+	mov r0,#1
+	bl htmlUpdaterA212
+
 	ldr r0,=a212Estado
 	mov r1,#1
 	str r1,[r0]
@@ -265,6 +285,10 @@ a212O:
 	mov r0,#21
 	mov r1,#0
 	bl SetGpio
+
+	@@actualizacion de HTML
+	mov r0,#0
+	bl htmlUpdaterA212
 
 	ldr r0,=a212Estado
 	mov r1,#2
@@ -338,7 +362,7 @@ wait: 												@Subrutina de delay
 	origenX3: .word 830
 .global myloc
 	myloc: .word 0
-@@SE UTILIZA PARA SABER SI EL SALON ESTA DISPONIBLE O NO
+@@SE UTILIZA PARA SABER SI EL SALON ESTA DISPONIBLE O NO *(1 libreo 2 ocupado)
 a210Estado: .word 1
 a211Estado: .word 1
 a212Estado: .word 1
