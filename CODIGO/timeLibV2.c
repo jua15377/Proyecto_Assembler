@@ -8,16 +8,6 @@
 #include <time.h>
 #include <errno.h>
 
-int getCycles(void){
-  clock_t cycles;
-  cycles = clock();
-  return((int) cycles);
-}
-
-int getCPS(void){
-  return((int)CLOCKS_PER_SEC);
-}
-
 //CODIGO TOMADO DE : http://www.informit.com/articles/article.aspx?p=23618&seqNum=11
 //HECHO POR : Mark L. Mitchell and Jeffrey Oldham (OCT 12,2001)
 //ADAPTOADOR POR: Jonnathan Juarez

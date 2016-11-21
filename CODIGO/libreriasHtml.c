@@ -1,5 +1,11 @@
-/*importane INSTALAR PRIMERO python-dev*/
-/*importante colocar todo el path*/
+/** Proyecto
+* Programa principal 
+* Por: Rodrigo Barrios, Carnet: 15009
+*    Juan Garcia, Carnet: 15046
+*      Jonnathan Juares, Carnet: 15377
+*   Taller de Assembler, Seccio: 30
+importante colocar todo el path*/
+
 #include </usr/include/python2.7/Python.h>
 #include <stdio.h>
 /*comppila con: gcc -lpython2.7 -o name prueba2.c*/

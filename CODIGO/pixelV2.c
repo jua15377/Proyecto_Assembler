@@ -1,3 +1,11 @@
+/* Proyecto 
+* Programa principal 
+* Por: Rodrigo Barrios, Carnet: 15009
+*    Juan Garcia, Carnet: 15046
+*      Jonnathan Juares, Carnet: 15377
+*   Taller de Assembler, Seccio: 30*/
+
+
 #include<unistd.h>
 #include<stdio.h>
 #include<stdlib.h>
